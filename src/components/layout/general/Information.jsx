@@ -15,7 +15,7 @@ export const Information = () => {
   return (
     <>
       <Nav />
-      <div className="container mt-5">
+      <div className="container  mt-5 background-container" >
         <div className="row">
           <div className="col-lg-6 mb-4">
             <h1>Bienvenidos a Rotary Maipú</h1>
@@ -131,7 +131,7 @@ export const Information = () => {
           </div>
         </div>
       </div>
-      <div className="container">
+      <div className="container background-container">
       <div className="row justify-content-center">
         <div className="col-lg-6 mb-4 text-center">
           <img src={img8} className="img-fluid rounded img8-info small-img" alt="Rotary" />

@@ -1,5 +1,5 @@
 import React from "react";
-import imgBanner from "../../../assets/img/sobre-nosotros.jpg";
+import imgBanner from "../../../assets/img/manos-sembrando.avif";
 import Nav from "./Nav";
 import "../../../assets/styles/nosotros.css";
 import Gallery from "./Gallery";
@@ -13,15 +13,16 @@ export const Nosotros = () => {
         <div className="container-fluid">
           <div className="row">
             <div className="col-md-12 text-center">
-              <h2 className="h2-sobre-nosotros">¡Bienvenido a nuestra página de informacion"!</h2>
+              <h2 className="h2-sobre-nosotros">¡ <span className="texto1">Bienvenidos</span> a nuestra página de informacion"!</h2>
               <p className="p-sobre-nosotros">
-                En Rotary Maipú, nos dedicamos a servir a nuestra comunidad con compromiso y pasión.
+                <span className="texto1">En Rotary  </span> Maipú,   <span className="texto2">nos dedicamos a servir a nuestra comunidad</span>   con compromiso y pasión.
+             
               </p>
             </div>
           </div>
         </div>
       </div>
-      <div className="container mt-4">
+      <div className="container mt-4 information">
         <div className="row">
           <div className="col-md-12">
             <h3 className="section-title">Quiénes Somos</h3>
@@ -36,7 +37,7 @@ export const Nosotros = () => {
 
             <h3 className="section-title">Nuestros Valores</h3>
             <p className="descripcion-sobre-nosotros">
-              En Rotary Maipú, valoramos la integridad, la diversidad, el servicio y el liderazgo. Creemos que al trabajar juntos con un fuerte sentido de ética y responsabilidad, podemos lograr un cambio significativo y positivo en nuestra comunidad y en el mundo.
+              En <span className="texto1">Rotary </span>Maipú, valoramos la integridad, la diversidad, el servicio y el liderazgo. Creemos que al trabajar juntos con un fuerte sentido de ética y responsabilidad, podemos lograr un cambio significativo y positivo en nuestra comunidad y en el mundo.
             </p>
 
             <h3 className="section-title">Proyectos Destacados</h3>

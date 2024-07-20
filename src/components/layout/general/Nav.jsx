@@ -79,19 +79,11 @@ function Nav() {
                   Inicia Seccion
                 </NavLink>
               </li>
-              <li>
-                <NavLink className="dropdown-item" to="/registro">
-                  Registrar Usuario
-                </NavLink>
-              </li>
+             
               <li>
                 <hr className="dropdown-divider" />
               </li>
-              <li>
-                <NavLink className="dropdown-item" to="/user-posts">
-                  Publicaciones Usuarios
-                </NavLink>
-              </li>
+        
             </ul>
           </li>
         </ul>

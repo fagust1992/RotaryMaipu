@@ -19,7 +19,7 @@ const Gallery = () => {
     {
       id: 2,
       imageUrl: Peace,
-      description: "Descripción de la imagen 2",
+      description: "Paz",
     },
     {
       id: 3,

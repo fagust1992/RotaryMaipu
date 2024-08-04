@@ -16,7 +16,7 @@ const AuthProvider = ({ children }) => {
 
     if (!token || !user) {
       console.log("No token or user found in localStorage");
-      return null; 
+      return null;
     }
 
     const userObj = JSON.parse(user);
@@ -45,7 +45,7 @@ const AuthProvider = ({ children }) => {
       return null; // o maneja el error de otra manera según tu aplicación
     }
   };
-
+  console.log(auth);
   return (
     <AuthContext.Provider value={{ auth, setAuth, getProfile }}>
       {children}

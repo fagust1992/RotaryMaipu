@@ -9,8 +9,10 @@ import Footer from "./Footer";
 
 export const PublicLayout = () => {
   const auth = Profile(); // Asegúrate de que el hook se llame Profile
-  console.log(auth._id); // Opcional: Para verificar el valor de auth._id
-console.log("estoy en principal")
+
+  console.log(auth); // Opcional: Para verificar el valor de auth._id
+  console.log("estoy en principal");
+
   return (
     <>
       {/* LAYOUT */}
@@ -19,11 +21,11 @@ console.log("estoy en principal")
       <Banner />
       <BannerWithImage />
       <Gallery />
-
-      <News showAll = {false} />
+      <News showAll={false} />
       <Footer />
+
       <section className="layout_content">
-        {auth._id ? <Navigate to="" /> : <Outlet />}
+        {!auth._id ? <Outlet /> : <Navigate to="/perfil" />}
       </section>
     </>
   );

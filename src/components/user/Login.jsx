@@ -1,20 +1,37 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import Header from "../layout/general/Header";
-
-import useForm from "../../hooks/useForm"
-
+import useForm from "../../hooks/useForm";
 
 export const Login = () => {
-
-
   const initialValues = { email: "", password: "" };
-  const { formValues, isSubmitting, handleChange, handleSubmit,saved } = useForm(initialValues, 'login');
+  const { formValues, isSubmitting, handleChange, handleSubmit, saved } = useForm(initialValues, 'login');
+  const [valor, setValor] = useState("");
+  const navigate = useNavigate();
+  
+ 
+
+
+
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      setValor(token);
+      // Defer navigation to avoid causing an infinite loop
+      setTimeout(() => {
+        navigate("/perfil");
+      }, 0);
+    } else {
+      setValor("Sin Loguearse");
+    }
+  }, [navigate]);
 
   return (
     <div>
       <Header />
-
-      <h4>{saved}</h4>
+      <h4>{valor}</h4>
       <div className="content_post">
         <form className="form-login" onSubmit={handleSubmit}>
           <div className="form-group">
@@ -28,7 +45,6 @@ export const Login = () => {
               disabled={isSubmitting}
             />
           </div>
-
           <div className="form-group">
             <label htmlFor="password">Contraseña</label>
             <input
@@ -40,7 +56,6 @@ export const Login = () => {
               disabled={isSubmitting}
             />
           </div>
-
           <input
             type="submit"
             value="Identificate"
@@ -52,3 +67,5 @@ export const Login = () => {
     </div>
   );
 };
+
+export default Login;

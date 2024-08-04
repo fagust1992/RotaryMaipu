@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Global } from "../helpers/Global";
 
-const useRegisterForm = (initialValues, submitType) => {
+const useForm = (initialValues, submitType) => {
   const [formValues, setFormValues] = useState(initialValues);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [saved, setSaved] = useState("Sin Loguearse"); // estaod de loguease
@@ -83,4 +83,4 @@ const useRegisterForm = (initialValues, submitType) => {
   };
 };
 
-export default useRegisterForm;
+export default useForm;

@@ -76,7 +76,7 @@ const ContactForm = ({ fondo = "#12A7A9" }) => {
               className="img-fluid img-contact"
             />
             <div className="enlace_de_WhatsApp">
-              <a href="https://wa.me/+56951925873">
+              <a href="https://wa.me/+56988000394">
                 <img
                   src={icono_whastpp}
                   alt="Icono de WhatsApp"

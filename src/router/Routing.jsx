@@ -12,6 +12,7 @@ import { Nosotros } from "../components/layout/general/Nosotros";
 import { PerfiUser } from "../components/layout/Privado/PerfiUser";
 import GeneradorPDF from "../components/layout/general/GeneradorPDF";
 import MaintenancePage from "../components/layout/general/MaintenancePage";
+import ScrollToTop from "../components/layout/general/ScrollToTop";
 
 const AppRoutes = () => {
   const { auth, getProfile } = useContext(AuthContext);
@@ -37,19 +38,21 @@ const AppRoutes = () => {
   const isAuthenticated = token && user;
 
   return (
-    <Routes>
-      <Route path="/" element={isAuthenticated ? <Navigate to="/perfil" /> : <PublicLayout />} />
-      <Route path="/contacto" element={<ContactForm />} />
-      <Route path="/noticias" element={<Reports />} />
-      <Route path="/informacion" element={<Nosotros />} />
-      <Route path="/nosotros" element={<Information />} />
-      <Route path="/login" element={<MaintenancePage/>} />
-      <Route path="/perfil" element={isAuthenticated ? <PerfiUser /> : <Navigate to="/login" />} />
-      <Route path="/registro" element={<Register/> } />
-      <Route path="*" element={<><h1>Error 404</h1><Link to="/">Volver</Link></>} />
-      <Route path="/generate" element={<GeneradorPDF />} /> {/* Nueva ruta */}
-   
-    </Routes>
+    <>
+      <ScrollToTop />
+      <Routes>
+        <Route path="/" element={isAuthenticated ? <Navigate to="/perfil" /> : <PublicLayout />} />
+        <Route path="/contacto" element={<ContactForm />} />
+        <Route path="/noticias" element={<Reports />} />
+        <Route path="/informacion" element={<Nosotros />} />
+        <Route path="/nosotros" element={<Information />} />
+        <Route path="/login" element={<MaintenancePage />} />
+        <Route path="/perfil" element={isAuthenticated ? <PerfiUser /> : <Navigate to="/login" />} />
+        <Route path="/registro" element={<Register />} />
+        <Route path="*" element={<><h1>Error 404</h1><Link to="/">Volver</Link></>} />
+        <Route path="/generate" element={<GeneradorPDF />} />
+      </Routes>
+    </>
   );
 };
 

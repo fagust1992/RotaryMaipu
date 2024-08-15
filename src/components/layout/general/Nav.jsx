@@ -48,6 +48,11 @@ function Nav() {
               Contactanos
             </NavLink>
           </li>
+          <li className="nav-item">
+            <NavLink className="nav-link text-nav" to="/registro">
+              Registrar
+            </NavLink>
+          </li>
    
         </ul>
         <ul className="navbar-nav ms-auto">

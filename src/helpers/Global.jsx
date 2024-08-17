@@ -1,1 +1,1 @@
-export const Global = { url: "http://roratymaipubackend-production-3c1b.up.railway.app/api/" };
+export const Global = { url: "https://roratymaipubackend3.onrender.com/api/" };

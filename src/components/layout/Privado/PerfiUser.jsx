@@ -6,7 +6,7 @@ export const PerfiUser = () => {
   console.log(auth);
   return (
 <>
-<h3>estamos en perfil usuario</h3>
+<h3>estamos en perfil usuario construyendo pagina</h3>
 
 </>
   )

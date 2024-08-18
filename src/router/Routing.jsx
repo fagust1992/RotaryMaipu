@@ -42,11 +42,13 @@ const AppRoutes = () => {
       <ScrollToTop />
       <Routes>
         <Route path="/" element={isAuthenticated ? <Navigate to="/perfil" /> : <PublicLayout />} />
+        
         <Route path="/contacto" element={<ContactForm />} />
         <Route path="/noticias" element={<Reports />} />
-        <Route path="/informacion" element={<Nosotros />} />
+        <Route path="/informacion" element={isAuthenticated ? <Navigate to="/perfil" /> : <Nosotros/>} />
         <Route path="/nosotros" element={<Information />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={isAuthenticated ? <Navigate to="/perfil" /> : <Login />} />
+
         <Route path="/perfil" element={isAuthenticated ? <PerfiUser /> : <Navigate to="/login" />} />
         <Route path="/registro" element={<Register />} />
         <Route path="*" element={<><h1>Error 404</h1><Link to="/">Volver</Link></>} />

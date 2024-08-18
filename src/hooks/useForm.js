@@ -4,7 +4,7 @@ import { Global } from "../helpers/Global";
 const useForm = (initialValues, submitType) => {
   const [formValues, setFormValues] = useState(initialValues);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [saved, setSaved] = useState("Sin Loguearse"); // estaod de loguease
+  const [saved, setSaved] = useState("Sin Loguearse"); // Estado de logueo
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -47,8 +47,8 @@ const useForm = (initialValues, submitType) => {
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
 
-        // Aquí puedes guardar la información del usuario si es necesario
-        // localStorage.setItem('user', JSON.stringify(data.user));
+        // Recargar la página para aplicar los cambios
+        window.location.reload();
       } else {
         setSaved("error");
       }
@@ -76,7 +76,6 @@ const useForm = (initialValues, submitType) => {
   return {
     formValues,
     isSubmitting,
-
     handleChange,
     handleSubmit,
     saved,

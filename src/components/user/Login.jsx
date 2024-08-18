@@ -1,25 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
+import React from "react";
 import Header from "../layout/general/Header";
 import useForm from "../../hooks/useForm";
 
 export const Login = () => {
   const initialValues = { email: "", password: "" };
-  const { formValues, isSubmitting, handleChange, handleSubmit } = useForm(initialValues, 'login');
-  const navigate = useNavigate();
-  
-  useEffect(() => {
-    // Function to check token and redirect if needed
-    const checkToken = () => {
-      const storedToken = localStorage.getItem("token");
-      if (storedToken) {
-        // If token exists, redirect to /perfil
-        navigate("/perfil");
-      }
-    };
-
-    checkToken(); // Call the function to check token and redirect
-  }, [navigate]);
+  const { formValues, isSubmitting, handleChange, handleSubmit } = useForm(
+    initialValues,
+    "login"
+  );
 
   return (
     <div>

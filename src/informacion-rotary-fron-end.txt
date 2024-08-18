@@ -1,0 +1,160 @@
+hola quiero que me recarge de useForm  y no desde  login te dejare ambos codigos 
+para que lo hagas en login solo quiero el formulario  revisa mi codigo
+
+
+
+
+import React from "react";
+import Header from "../layout/general/Header";
+import useForm from "../../hooks/useForm";
+
+export const Login = () => {
+  const initialValues = { email: "", password: "" };
+  const { formValues, isSubmitting, handleChange, handleSubmit } = useForm(
+    initialValues,
+    "login"
+  );
+
+  const handleLoginSubmit = async (event) => {
+    event.preventDefault();
+    const token = await handleSubmit(event);
+
+    if (token) {
+      // Guardar el token en localStorage
+      localStorage.setItem("token", token);
+
+      // Recargar la página para aplicar los cambios
+      window.location.reload();
+    }
+  };
+
+  return (
+    <div>
+      <Header />
+      <div className="content_post">
+        <form className="form-login" onSubmit={handleLoginSubmit}>
+          <div className="form-group">
+            <label htmlFor="email">Correo</label>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              value={formValues.email}
+              onChange={handleChange}
+              disabled={isSubmitting}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="password">Contraseña</label>
+            <input
+              type="password"
+              name="password"
+              id="password"
+              value={formValues.password}
+              onChange={handleChange}
+              disabled={isSubmitting}
+            />
+          </div>
+          <input
+            type="submit"
+            value="Identificate"
+            className="btn btn-success"
+            disabled={isSubmitting}
+          />
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default Login;
+
+
+import { useState } from "react";
+import { Global } from "../helpers/Global";
+
+const useForm = (initialValues, submitType) => {
+  const [formValues, setFormValues] = useState(initialValues);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [saved, setSaved] = useState("Sin Loguearse"); // estaod de loguease
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues({
+      ...formValues,
+      [name]: value,
+    });
+  };
+
+  const saveUser = async () => {
+    try {
+      const newUser = formValues;
+
+      const request = await fetch(Global.url + "user/register", {
+        method: "POST",
+        body: JSON.stringify(newUser),
+        headers: { "Content-Type": "application/json" },
+      });
+      const data = await request.json();
+      console.log(data);
+      setSaved(data.status === "success" ? "registered" : "error");
+    } catch (error) {
+      console.error("Error al registrar usuario:", error);
+      setSaved("error");
+    }
+  };
+
+  const loginUser = async () => {
+    try {
+      const userCredentials = formValues;
+      const request = await fetch(Global.url + "user/login", {
+        method: "POST",
+        body: JSON.stringify(userCredentials),
+        headers: { "Content-Type": "application/json" },
+      });
+      const data = await request.json();
+      console.log(data);
+      if (data.status === "success") {
+        setSaved("logueado");
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+      // Recargar la página para aplicar los cambios
+      window.location.reload();
+
+        // Aquí puedes guardar la información del usuario si es necesario
+        // localStorage.setItem('user', JSON.stringify(data.user));
+      } else {
+        setSaved("error");
+      }
+    } catch (error) {
+      console.error("Error al iniciar sesión:", error);
+      setSaved("error");
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    if (submitType === "register") {
+      await saveUser();
+    } else if (submitType === "login") {
+      await loginUser();
+    }
+
+    setTimeout(() => {
+      setIsSubmitting(false);
+    }, 2000);
+  };
+
+  return {
+    formValues,
+    isSubmitting,
+
+    handleChange,
+    handleSubmit,
+    saved,
+  };
+};
+
+export default useForm;

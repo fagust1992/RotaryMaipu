@@ -13,6 +13,11 @@ export const PublicLayout = () => {
   console.log(auth); // Opcional: Para verificar el valor de auth._id
   console.log("estoy en principal");
 
+  // Verificar si auth._id está definido y tiene un valor
+  if (auth._id) {
+    return <Navigate to="/perfil" />;
+  }
+
   return (
     <>
       {/* LAYOUT */}
@@ -25,10 +30,11 @@ export const PublicLayout = () => {
       <Footer />
 
       <section className="layout_content">
-        {!auth._id ? <Outlet /> : <Navigate to="/perfil" />}
+        <Outlet />
       </section>
     </>
   );
 };
 
 export default PublicLayout;
+

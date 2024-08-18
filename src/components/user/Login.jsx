@@ -5,33 +5,25 @@ import useForm from "../../hooks/useForm";
 
 export const Login = () => {
   const initialValues = { email: "", password: "" };
-  const { formValues, isSubmitting, handleChange, handleSubmit, saved } = useForm(initialValues, 'login');
-  const [valor, setValor] = useState("");
+  const { formValues, isSubmitting, handleChange, handleSubmit } = useForm(initialValues, 'login');
   const navigate = useNavigate();
   
- 
-
-
-
-
   useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    if (token) {
-      setValor(token);
-      // Defer navigation to avoid causing an infinite loop
-      setTimeout(() => {
+    // Function to check token and redirect if needed
+    const checkToken = () => {
+      const storedToken = localStorage.getItem("token");
+      if (storedToken) {
+        // If token exists, redirect to /perfil
         navigate("/perfil");
-      }, 0);
-    } else {
-      setValor("Sin Loguearse");
-    }
+      }
+    };
+
+    checkToken(); // Call the function to check token and redirect
   }, [navigate]);
 
   return (
     <div>
       <Header />
-      <h4>{valor}</h4>
       <div className="content_post">
         <form className="form-login" onSubmit={handleSubmit}>
           <div className="form-group">

@@ -46,7 +46,7 @@ const AppRoutes = () => {
         <Route path="/noticias" element={<Reports />} />
         <Route path="/informacion" element={<Nosotros />} />
         <Route path="/nosotros" element={<Information />} />
-        <Route path="/login" element={<MaintenancePage />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/perfil" element={isAuthenticated ? <PerfiUser /> : <Navigate to="/login" />} />
         <Route path="/registro" element={<Register />} />
         <Route path="*" element={<><h1>Error 404</h1><Link to="/">Volver</Link></>} />

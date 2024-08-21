@@ -48,7 +48,7 @@ const useForm = (initialValues, submitType) => {
         localStorage.setItem("user", JSON.stringify(data.user));
 
         // Recargar la página para aplicar los cambios
-        window.location.reload();
+    window.location.href = "/perfil";
       } else {
         setSaved("error");
       }

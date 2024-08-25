@@ -1,285 +1,115 @@
-hola necesito hacer mejor esto  cambia que cuado este en useForm  me rediriga perfil cuanado exita el token  te dejare
-todos mi codigo relacionados para esto yo necesito que cuando me loguee actuamente me valla a perfil que no tenga que reinicar
-la pagina lucete:
-
-
-
-
-import { useState, useEffect } from "react";
-import { Global } from "../helpers/Global";
-import { useNavigate } from "react-router-dom";
-
-const useForm = (initialValues, submitType) => {
-  const [formValues, setFormValues] = useState(initialValues);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [saved, setSaved] = useState("Sin Loguearse");
-
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (saved === "logueado") {
-      navigate("/perfil");
-    }
-  }, [saved, navigate]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormValues({
-      ...formValues,
-      [name]: value,
-    });
-  };
-
-  const saveUser = async () => {
-    try {
-      const newUser = formValues;
-      const request = await fetch(Global.url + "user/register", {
-        method: "POST",
-        body: JSON.stringify(newUser),
-        headers: { "Content-Type": "application/json" },
-      });
-      const data = await request.json();
-      setSaved(data.status === "success" ? "registered" : "error");
-    } catch (error) {
-      console.error("Error al registrar usuario:", error);
-      setSaved("error");
-    }
-  };
-
-  const loginUser = async () => {
-    try {
-      const userCredentials = formValues;
-      const request = await fetch(Global.url + "user/login", {
-        method: "POST",
-        body: JSON.stringify(userCredentials),
-        headers: { "Content-Type": "application/json" },
-      });
-      const data = await request.json();
-      if (data.status === "success") {
-        setSaved("logueado");
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
-      } else {
-        setSaved("error");
-      }
-    } catch (error) {
-      console.error("Error al iniciar sesión:", error);
-      setSaved("error");
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    if (submitType === "register") {
-      await saveUser();
-    } else if (submitType === "login") {
-      await loginUser();
-    }
-
-    setTimeout(() => {
-      setIsSubmitting(false);
-    }, 2000);
-  };
-
-  return {
-    formValues,
-    isSubmitting,
-    handleChange,
-    handleSubmit,
-    saved,
-  };
-};
-
-export default useForm;
-
-
-
-
-import React, { useContext, useEffect, useState } from "react";
-import { BrowserRouter, Route, Routes, Navigate, Link } from "react-router-dom";
-import { PublicLayout } from "../components/layout/general/PublicLayout";
-import PrivateLayout from "../components/layout/Privado/PrivateLayout";
-import { Login } from "../components/user/Login";
-import { Register } from "../components/user/Privado/Register";
-import ContactForm from "../components/layout/general/ContactForm";
-import AuthProvider, { AuthContext } from "../context/AuthProvider";
-import { Reports } from "../components/layout/general/Reports";
-import { Information } from "../components/layout/general/Information";
-import { Nosotros } from "../components/layout/general/Nosotros";
-import { PerfiUser } from "../components/layout/Privado/PerfiUser";
-import GeneradorPDF from "../components/layout/general/GeneradorPDF";
-import MaintenancePage from "../components/layout/general/MaintenancePage";
-import ScrollToTop from "../components/layout/general/ScrollToTop";
-
-const AppRoutes = () => {
-  const { auth, getProfile } = useContext(AuthContext);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      if (!auth) {
-        await getProfile();
-      }
-      setLoading(false);
-    };
-    fetchProfile();
-  }, [auth, getProfile]);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  const token = localStorage.getItem("token");
-  const user = localStorage.getItem("user");
-
-  const isAuthenticated = token && user;
-
-  return (
-    <>
-      <ScrollToTop />
-      <Routes>
-        <Route path="/" element={isAuthenticated ? <Navigate to="/perfil" /> : <PublicLayout />} />
-        
-        <Route path="/contacto" element={<ContactForm />} />
-        <Route path="/noticias" element={<Reports />} />
-        <Route path="/informacion" element={isAuthenticated ? <Navigate to="/perfil" /> : <Nosotros/>} />
-        <Route path="/nosotros" element={<Information />} />
-        <Route path="/login" element={isAuthenticated ? <Navigate to="/perfil" /> : <Login />} />
-
-        <Route path="/perfil" element={isAuthenticated ? <PerfiUser /> : <Navigate to="/login" />} />
-        <Route path="/registro" element={<Register />} />
-        <Route path="*" element={<><h1>Error 404</h1><Link to="/">Volver</Link></>} />
-        <Route path="/generate" element={<GeneradorPDF />} />
-      </Routes>
-    </>
-  );
-};
-
-const Routing = () => {
-  return (
-    <BrowserRouter>
-      <AuthProvider>
-        <AppRoutes />
-      </AuthProvider>
-    </BrowserRouter>
-  );
-};
-
-export default Routing;
-
-import React, { useContext, useEffect, useState } from "react";
-import { BrowserRouter, Route, Routes, Navigate, Link } from "react-router-dom";
-import { PublicLayout } from "../components/layout/general/PublicLayout";
-import PrivateLayout from "../components/layout/Privado/PrivateLayout";
-import { Login } from "../components/user/Login";
-import { Register } from "../components/user/Privado/Register";
-import ContactForm from "../components/layout/general/ContactForm";
-import AuthProvider, { AuthContext } from "../context/AuthProvider";
-import { Reports } from "../components/layout/general/Reports";
-import { Information } from "../components/layout/general/Information";
-import { Nosotros } from "../components/layout/general/Nosotros";
-import { PerfiUser } from "../components/layout/Privado/PerfiUser";
-import GeneradorPDF from "../components/layout/general/GeneradorPDF";
-import MaintenancePage from "../components/layout/general/MaintenancePage";
-import ScrollToTop from "../components/layout/general/ScrollToTop";
-
-const AppRoutes = () => {
-  const { auth, getProfile } = useContext(AuthContext);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      if (!auth) {
-        await getProfile();
-      }
-      setLoading(false);
-    };
-    fetchProfile();
-  }, [auth, getProfile]);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  const token = localStorage.getItem("token");
-  const user = localStorage.getItem("user");
-
-  const isAuthenticated = token && user;
-
-  return (
-    <>
-      <ScrollToTop />
-      <Routes>
-        <Route path="/" element={isAuthenticated ? <Navigate to="/perfil" /> : <PublicLayout />} />
-        
-        <Route path="/contacto" element={<ContactForm />} />
-        <Route path="/noticias" element={<Reports />} />
-        <Route path="/informacion" element={isAuthenticated ? <Navigate to="/perfil" /> : <Nosotros/>} />
-        <Route path="/nosotros" element={<Information />} />
-        <Route path="/login" element={isAuthenticated ? <Navigate to="/perfil" /> : <Login />} />
-
-        <Route path="/perfil" element={isAuthenticated ? <PerfiUser /> : <Navigate to="/login" />} />
-        <Route path="/registro" element={<Register />} />
-        <Route path="*" element={<><h1>Error 404</h1><Link to="/">Volver</Link></>} />
-        <Route path="/generate" element={<GeneradorPDF />} />
-      </Routes>
-    </>
-  );
-};
-
-const Routing = () => {
-  return (
-    <BrowserRouter>
-      <AuthProvider>
-        <AppRoutes />
-      </AuthProvider>
-    </BrowserRouter>
-  );
-};
-
-export default Routing;
-
-
-
+hola te deja mi idea y mi codigo realacionados para que lo hagas no quieero que cambiees nada
+de mis variales los nombres puedes cambiar la logica pero no los nombres ok , necesito
+en el componente de login cuando me loguee tenga un boton que si lo pinche el usuario vaya perfil
+y un parrafor que diga fuiste logueado con exito te dejo mi codigos:
 
 import React from "react";
-import { Outlet, Navigate } from "react-router-dom";
-import Header from "../../../components/layout/general/Header";
-import { Widgets } from "./Widgets";
-import Profile from "../../../hooks/Profile";
-import { Banner, BannerWithImage, News } from "./Banner";
-import Gallery from "./Gallery";
-import Footer from "./Footer";
+import Header from "../layout/general/Header";
+import useForm from "../../hooks/useForm";
 
-export const PublicLayout = () => {
-  const auth = Profile(); 
-
-  console.log(auth);
-  console.log("estoy en principal");
-
-  if (auth._id) {
-    return <Navigate to="/perfil" />;
-  }
+export const Login = () => {
+  const initialValues = { email: "", password: "" };
+  const { formValues, isSubmitting, handleChange, handleSubmit } = useForm(
+    initialValues,
+    "login"
+  );
 
   return (
-    <>
+    <div>
       <Header />
-      <Widgets />
-      <Banner />
-      <BannerWithImage />
-      <Gallery />
-      <News showAll={false} />
-      <Footer />
-
-      <section className="layout_content">
-        <Outlet />
-      </section>
-    </>
+      <div className="content_post">
+        <form className="form-login" onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="email">Correo</label>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              value={formValues.email}
+              onChange={handleChange}
+              disabled={isSubmitting}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="password">Contraseña</label>
+            <input
+              type="password"
+              name="password"
+              id="password"
+              value={formValues.password}
+              onChange={handleChange}
+              disabled={isSubmitting}
+            />
+          </div>
+          <input
+            type="submit"
+            value="Identificate"
+            className="btn btn-success"
+            disabled={isSubmitting}
+          />
+        </form>
+      </div>
+    </div>
   );
 };
 
-export default PublicLayout;
+export default Login;
 
 
+
+import { createContext, useState, useEffect } from "react";
+import { Global } from "../helpers/Global";
+
+export const AuthContext = createContext();
+
+const AuthProvider = ({ children }) => {
+  const [auth, setAuth] = useState({});
+
+  useEffect(() => {
+    getProfile();
+  }, []);
+
+  const getProfile = async () => {
+    const token = localStorage.getItem("token");
+    const user = localStorage.getItem("user");
+
+    if (!token || !user) {
+      console.log("No token or user found in localStorage");
+      return null;
+    }
+
+    const userObj = JSON.parse(user);
+
+    const userId = userObj.id;
+
+    try {
+      const request = await fetch(Global.url + "user/profile/" + userId, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      });
+
+      if (!request.ok) {
+        throw new Error(`Error en la solicitud: ${request.status}`);
+      }
+
+      const data = await request.json();
+
+      setAuth(data.user); // Actualiza el estado de autenticación con el perfil del usuario
+      return data.user; // Retorna los datos del usuario si es necesario
+    } catch (error) {
+      console.error("Error al obtener el perfil del usuario:", error);
+      return null; // o maneja el error de otra manera según tu aplicación
+    }
+  };
+  console.log(auth);
+  return (
+    <AuthContext.Provider value={{ auth, setAuth, getProfile }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+export default AuthProvider;

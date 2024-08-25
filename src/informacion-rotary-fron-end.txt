@@ -1,12 +1,285 @@
-ahora me sale lo mismo pero me quito un error de consola 
-solo me sale esto en consola:
- https://rotaryclubmaipu.org/login 404 (Not Found)  
+hola necesito hacer mejor esto  cambia que cuado este en useForm  me rediriga perfil cuanado exita el token  te dejare
+todos mi codigo relacionados para esto yo necesito que cuando me loguee actuamente me valla a perfil que no tenga que reinicar
+la pagina lucete:
 
- y en la pagina otra vez :
- Page Not Found
-Looks like you've followed a broken link or entered a URL that doesn't exist on this site.
 
- Back to our site
 
-If this is your site, and you weren't expecting a 404 for this path, please visit Netlify's "page not found" support guide for troubleshooting tips.
-si presiono 
+
+import { useState, useEffect } from "react";
+import { Global } from "../helpers/Global";
+import { useNavigate } from "react-router-dom";
+
+const useForm = (initialValues, submitType) => {
+  const [formValues, setFormValues] = useState(initialValues);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [saved, setSaved] = useState("Sin Loguearse");
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (saved === "logueado") {
+      navigate("/perfil");
+    }
+  }, [saved, navigate]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues({
+      ...formValues,
+      [name]: value,
+    });
+  };
+
+  const saveUser = async () => {
+    try {
+      const newUser = formValues;
+      const request = await fetch(Global.url + "user/register", {
+        method: "POST",
+        body: JSON.stringify(newUser),
+        headers: { "Content-Type": "application/json" },
+      });
+      const data = await request.json();
+      setSaved(data.status === "success" ? "registered" : "error");
+    } catch (error) {
+      console.error("Error al registrar usuario:", error);
+      setSaved("error");
+    }
+  };
+
+  const loginUser = async () => {
+    try {
+      const userCredentials = formValues;
+      const request = await fetch(Global.url + "user/login", {
+        method: "POST",
+        body: JSON.stringify(userCredentials),
+        headers: { "Content-Type": "application/json" },
+      });
+      const data = await request.json();
+      if (data.status === "success") {
+        setSaved("logueado");
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+      } else {
+        setSaved("error");
+      }
+    } catch (error) {
+      console.error("Error al iniciar sesión:", error);
+      setSaved("error");
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    if (submitType === "register") {
+      await saveUser();
+    } else if (submitType === "login") {
+      await loginUser();
+    }
+
+    setTimeout(() => {
+      setIsSubmitting(false);
+    }, 2000);
+  };
+
+  return {
+    formValues,
+    isSubmitting,
+    handleChange,
+    handleSubmit,
+    saved,
+  };
+};
+
+export default useForm;
+
+
+
+
+import React, { useContext, useEffect, useState } from "react";
+import { BrowserRouter, Route, Routes, Navigate, Link } from "react-router-dom";
+import { PublicLayout } from "../components/layout/general/PublicLayout";
+import PrivateLayout from "../components/layout/Privado/PrivateLayout";
+import { Login } from "../components/user/Login";
+import { Register } from "../components/user/Privado/Register";
+import ContactForm from "../components/layout/general/ContactForm";
+import AuthProvider, { AuthContext } from "../context/AuthProvider";
+import { Reports } from "../components/layout/general/Reports";
+import { Information } from "../components/layout/general/Information";
+import { Nosotros } from "../components/layout/general/Nosotros";
+import { PerfiUser } from "../components/layout/Privado/PerfiUser";
+import GeneradorPDF from "../components/layout/general/GeneradorPDF";
+import MaintenancePage from "../components/layout/general/MaintenancePage";
+import ScrollToTop from "../components/layout/general/ScrollToTop";
+
+const AppRoutes = () => {
+  const { auth, getProfile } = useContext(AuthContext);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      if (!auth) {
+        await getProfile();
+      }
+      setLoading(false);
+    };
+    fetchProfile();
+  }, [auth, getProfile]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  const token = localStorage.getItem("token");
+  const user = localStorage.getItem("user");
+
+  const isAuthenticated = token && user;
+
+  return (
+    <>
+      <ScrollToTop />
+      <Routes>
+        <Route path="/" element={isAuthenticated ? <Navigate to="/perfil" /> : <PublicLayout />} />
+        
+        <Route path="/contacto" element={<ContactForm />} />
+        <Route path="/noticias" element={<Reports />} />
+        <Route path="/informacion" element={isAuthenticated ? <Navigate to="/perfil" /> : <Nosotros/>} />
+        <Route path="/nosotros" element={<Information />} />
+        <Route path="/login" element={isAuthenticated ? <Navigate to="/perfil" /> : <Login />} />
+
+        <Route path="/perfil" element={isAuthenticated ? <PerfiUser /> : <Navigate to="/login" />} />
+        <Route path="/registro" element={<Register />} />
+        <Route path="*" element={<><h1>Error 404</h1><Link to="/">Volver</Link></>} />
+        <Route path="/generate" element={<GeneradorPDF />} />
+      </Routes>
+    </>
+  );
+};
+
+const Routing = () => {
+  return (
+    <BrowserRouter>
+      <AuthProvider>
+        <AppRoutes />
+      </AuthProvider>
+    </BrowserRouter>
+  );
+};
+
+export default Routing;
+
+import React, { useContext, useEffect, useState } from "react";
+import { BrowserRouter, Route, Routes, Navigate, Link } from "react-router-dom";
+import { PublicLayout } from "../components/layout/general/PublicLayout";
+import PrivateLayout from "../components/layout/Privado/PrivateLayout";
+import { Login } from "../components/user/Login";
+import { Register } from "../components/user/Privado/Register";
+import ContactForm from "../components/layout/general/ContactForm";
+import AuthProvider, { AuthContext } from "../context/AuthProvider";
+import { Reports } from "../components/layout/general/Reports";
+import { Information } from "../components/layout/general/Information";
+import { Nosotros } from "../components/layout/general/Nosotros";
+import { PerfiUser } from "../components/layout/Privado/PerfiUser";
+import GeneradorPDF from "../components/layout/general/GeneradorPDF";
+import MaintenancePage from "../components/layout/general/MaintenancePage";
+import ScrollToTop from "../components/layout/general/ScrollToTop";
+
+const AppRoutes = () => {
+  const { auth, getProfile } = useContext(AuthContext);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      if (!auth) {
+        await getProfile();
+      }
+      setLoading(false);
+    };
+    fetchProfile();
+  }, [auth, getProfile]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  const token = localStorage.getItem("token");
+  const user = localStorage.getItem("user");
+
+  const isAuthenticated = token && user;
+
+  return (
+    <>
+      <ScrollToTop />
+      <Routes>
+        <Route path="/" element={isAuthenticated ? <Navigate to="/perfil" /> : <PublicLayout />} />
+        
+        <Route path="/contacto" element={<ContactForm />} />
+        <Route path="/noticias" element={<Reports />} />
+        <Route path="/informacion" element={isAuthenticated ? <Navigate to="/perfil" /> : <Nosotros/>} />
+        <Route path="/nosotros" element={<Information />} />
+        <Route path="/login" element={isAuthenticated ? <Navigate to="/perfil" /> : <Login />} />
+
+        <Route path="/perfil" element={isAuthenticated ? <PerfiUser /> : <Navigate to="/login" />} />
+        <Route path="/registro" element={<Register />} />
+        <Route path="*" element={<><h1>Error 404</h1><Link to="/">Volver</Link></>} />
+        <Route path="/generate" element={<GeneradorPDF />} />
+      </Routes>
+    </>
+  );
+};
+
+const Routing = () => {
+  return (
+    <BrowserRouter>
+      <AuthProvider>
+        <AppRoutes />
+      </AuthProvider>
+    </BrowserRouter>
+  );
+};
+
+export default Routing;
+
+
+
+
+import React from "react";
+import { Outlet, Navigate } from "react-router-dom";
+import Header from "../../../components/layout/general/Header";
+import { Widgets } from "./Widgets";
+import Profile from "../../../hooks/Profile";
+import { Banner, BannerWithImage, News } from "./Banner";
+import Gallery from "./Gallery";
+import Footer from "./Footer";
+
+export const PublicLayout = () => {
+  const auth = Profile(); 
+
+  console.log(auth);
+  console.log("estoy en principal");
+
+  if (auth._id) {
+    return <Navigate to="/perfil" />;
+  }
+
+  return (
+    <>
+      <Header />
+      <Widgets />
+      <Banner />
+      <BannerWithImage />
+      <Gallery />
+      <News showAll={false} />
+      <Footer />
+
+      <section className="layout_content">
+        <Outlet />
+      </section>
+    </>
+  );
+};
+
+export default PublicLayout;
+
+

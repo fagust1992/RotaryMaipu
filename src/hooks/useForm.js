@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { Global } from "../helpers/Global";
+import { useNavigate } from "react-router-dom";
 
 const useForm = (initialValues, submitType) => {
   const [formValues, setFormValues] = useState(initialValues);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [saved, setSaved] = useState("Sin Loguearse"); // Estado de logueo
+
+  const navigate = useNavigate(); // useNavigate debe estar al nivel superior
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -47,8 +50,8 @@ const useForm = (initialValues, submitType) => {
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
 
-        // Recargar la página para aplicar los cambios
-    window.location.href = "/perfil";
+        // Redirigir a la página de perfil en lugar de recargar
+        navigate("/perfil");
       } else {
         setSaved("error");
       }

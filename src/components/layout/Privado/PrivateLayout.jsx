@@ -1,19 +1,21 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import { Register } from "../../user/Privado/Register"; // Importa usando {}
+import PrivateHeader from "./Privateheader";
+
+
 
 const PrivateLayout = () => {
   return (
     <>
+      {/* HEADER */}
+      <PrivateHeader />
+
       {/* LAYOUT */}
       <h1>Private Layout</h1>
 
       <section className="layout_content">
         <Outlet />
       </section>
-
-      {/* Componentes específicos de la ruta privada */}
-      <Register />
     </>
   );
 };

@@ -1,7 +1,9 @@
 import React from "react";
-import Header from "../../../components/layout/general/Header";
+
 import useForm from "../../../hooks/useForm";
 import "../../../assets/styles/register-form.css"
+import PrivateHeader from "../../layout/Privado/Privateheader";
+
 
 export const Register = () => {
 
@@ -20,8 +22,8 @@ export const Register = () => {
 
   return (
     <>
-      <Header />
-
+   <PrivateHeader/>
+<h6 className="text-center">Bienvenido a la seccion de registrar un Socio en Rotary Cludn Maipu</h6>
       <div className="content_post">
         <form className="register-form" onSubmit={handleSubmit}>
           <div className="form-group">

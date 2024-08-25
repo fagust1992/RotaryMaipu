@@ -50,7 +50,7 @@ const AppRoutes = () => {
         <Route path="/login" element={isAuthenticated ? <Navigate to="/perfil" /> : <Login />} />
 
         <Route path="/perfil" element={isAuthenticated ? <PerfiUser /> : <Navigate to="/login" />} />
-        <Route path="/registro" element={<Register />} />
+        <Route path="/registro"element={isAuthenticated ? <PerfiUser /> : <Navigate to="/login" />} />
         <Route path="*" element={<><h1>Error 404</h1><Link to="/">Volver</Link></>} />
         <Route path="/generate" element={<GeneradorPDF />} />
       </Routes>

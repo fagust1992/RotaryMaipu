@@ -1,81 +1,39 @@
-en este componente quiero mostrar la iamgen del usuario y nombre 
-
-ownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools
-AuthProvider.jsx:25 66c0b51bc0c1de2fa956efdc
-Profile.jsx:7 
-{}
-PerfiUser.jsx:6 
-{}
-Profile.jsx:13 {"id":"66c0b51bc0c1de2fa956efdc","name":"angela","nick":"mama"}
-Profile.jsx:7 
-{}
-PerfiUser.jsx:6 
-{_id: 'usuario_id_ejemplo'}
-AuthProvider.jsx:40 
-{status: 'success', user: {…}}
-status
-: 
-"success"
-user
-: 
-creat_at
-: 
-"2024-08-17T14:35:07.359Z"
-email
-: 
-"mama@bioplastic.cl"
-image
-: 
-"avatar-1725197177683-SIN-FOTO-FERFIL.jpg"
-name
-: 
-"angela"
-nick
-: 
-"mama"
-password
-: 
-"$2b$10$20V.FIiCJfam5UjO8FlTTOOxNUz2jcAM.1NgfySQcagiTrYUbfOam"
-role
-: 
-"role_user"
-surname
-: 
-"Agust Rincon"
-__v
-: 
-0
-_id
-: 
-"66c0b51bc0c1de2fa956efdc"
-[[Prototype]]
-: 
-Object
-[[Prototype]]
-: 
-Object
-
-
-import React from "react";
-import { Outlet } from "react-router-dom";
-import PrivateHeader from "./Privateheader";
-
-
-
-const PrivateLayout = () => {
-  return (
-    <>
-      {/* HEADER */}
-      <PrivateHeader />
-
-      {/* LAYOUT */}
-      <h1 className="text-center">Seccion Privada para socios</h1>
-
-      <section className="layout_content">
-        <Outlet />
-      </section>
-    </>
-  );
-};
-
-export default PrivateLayout;
+{
+  "name": "rotary-maipu",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "emailjs-com": "^3.2.0",
+    "formik": "^2.4.6",
+    "html2pdf.js": "^0.10.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.23.1",
+    "yup": "^1.4.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.66",
+    "@types/react-dom": "^18.2.22",
+    "@vitejs/plugin-react": "^4.2.1",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.34.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.6",
+    "vite": "^5.2.0"
+  },
+  "description": "This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.",
+  "main": "vite.config.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fagust1992/Rotary.git"
+  },
+  "author": "Francisco August",
+  "license": "ISC"
+}

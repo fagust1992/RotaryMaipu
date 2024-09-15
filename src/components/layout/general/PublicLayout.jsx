@@ -1,5 +1,5 @@
 import React from "react";
-import { Outlet, Navigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import Header from "../../../components/layout/general/Header";
 import { Widgets } from "./Widgets";
 import Profile from "../../../hooks/Profile";
@@ -8,14 +8,7 @@ import Gallery from "./Gallery";
 import Footer from "./Footer";
 
 export const PublicLayout = () => {
-  const auth = Profile(); 
 
-  console.log(auth);
-  console.log("estoy en principal");
-
-  if (auth._id) {
-    return <Navigate to="/perfil" />;
-  }
 
   return (
     <>
@@ -35,5 +28,4 @@ export const PublicLayout = () => {
 };
 
 export default PublicLayout;
-
 

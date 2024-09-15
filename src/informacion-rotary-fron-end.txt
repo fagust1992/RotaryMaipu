@@ -1,115 +1,81 @@
-hola te deja mi idea y mi codigo realacionados para que lo hagas no quieero que cambiees nada
-de mis variales los nombres puedes cambiar la logica pero no los nombres ok , necesito
-en el componente de login cuando me loguee tenga un boton que si lo pinche el usuario vaya perfil
-y un parrafor que diga fuiste logueado con exito te dejo mi codigos:
+en este componente quiero mostrar la iamgen del usuario y nombre 
+
+ownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools
+AuthProvider.jsx:25 66c0b51bc0c1de2fa956efdc
+Profile.jsx:7 
+{}
+PerfiUser.jsx:6 
+{}
+Profile.jsx:13 {"id":"66c0b51bc0c1de2fa956efdc","name":"angela","nick":"mama"}
+Profile.jsx:7 
+{}
+PerfiUser.jsx:6 
+{_id: 'usuario_id_ejemplo'}
+AuthProvider.jsx:40 
+{status: 'success', user: {…}}
+status
+: 
+"success"
+user
+: 
+creat_at
+: 
+"2024-08-17T14:35:07.359Z"
+email
+: 
+"mama@bioplastic.cl"
+image
+: 
+"avatar-1725197177683-SIN-FOTO-FERFIL.jpg"
+name
+: 
+"angela"
+nick
+: 
+"mama"
+password
+: 
+"$2b$10$20V.FIiCJfam5UjO8FlTTOOxNUz2jcAM.1NgfySQcagiTrYUbfOam"
+role
+: 
+"role_user"
+surname
+: 
+"Agust Rincon"
+__v
+: 
+0
+_id
+: 
+"66c0b51bc0c1de2fa956efdc"
+[[Prototype]]
+: 
+Object
+[[Prototype]]
+: 
+Object
+
 
 import React from "react";
-import Header from "../layout/general/Header";
-import useForm from "../../hooks/useForm";
+import { Outlet } from "react-router-dom";
+import PrivateHeader from "./Privateheader";
 
-export const Login = () => {
-  const initialValues = { email: "", password: "" };
-  const { formValues, isSubmitting, handleChange, handleSubmit } = useForm(
-    initialValues,
-    "login"
-  );
 
+
+const PrivateLayout = () => {
   return (
-    <div>
-      <Header />
-      <div className="content_post">
-        <form className="form-login" onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="email">Correo</label>
-            <input
-              type="email"
-              name="email"
-              id="email"
-              value={formValues.email}
-              onChange={handleChange}
-              disabled={isSubmitting}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="password">Contraseña</label>
-            <input
-              type="password"
-              name="password"
-              id="password"
-              value={formValues.password}
-              onChange={handleChange}
-              disabled={isSubmitting}
-            />
-          </div>
-          <input
-            type="submit"
-            value="Identificate"
-            className="btn btn-success"
-            disabled={isSubmitting}
-          />
-        </form>
-      </div>
-    </div>
+    <>
+      {/* HEADER */}
+      <PrivateHeader />
+
+      {/* LAYOUT */}
+      <h1 className="text-center">Seccion Privada para socios</h1>
+
+      <section className="layout_content">
+        <Outlet />
+      </section>
+    </>
   );
 };
 
-export default Login;
-
-
-
-import { createContext, useState, useEffect } from "react";
-import { Global } from "../helpers/Global";
-
-export const AuthContext = createContext();
-
-const AuthProvider = ({ children }) => {
-  const [auth, setAuth] = useState({});
-
-  useEffect(() => {
-    getProfile();
-  }, []);
-
-  const getProfile = async () => {
-    const token = localStorage.getItem("token");
-    const user = localStorage.getItem("user");
-
-    if (!token || !user) {
-      console.log("No token or user found in localStorage");
-      return null;
-    }
-
-    const userObj = JSON.parse(user);
-
-    const userId = userObj.id;
-
-    try {
-      const request = await fetch(Global.url + "user/profile/" + userId, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-      });
-
-      if (!request.ok) {
-        throw new Error(`Error en la solicitud: ${request.status}`);
-      }
-
-      const data = await request.json();
-
-      setAuth(data.user); // Actualiza el estado de autenticación con el perfil del usuario
-      return data.user; // Retorna los datos del usuario si es necesario
-    } catch (error) {
-      console.error("Error al obtener el perfil del usuario:", error);
-      return null; // o maneja el error de otra manera según tu aplicación
-    }
-  };
-  console.log(auth);
-  return (
-    <AuthContext.Provider value={{ auth, setAuth, getProfile }}>
-      {children}
-    </AuthContext.Provider>
-  );
-};
-
-export default AuthProvider;
+export default PrivateLayout;

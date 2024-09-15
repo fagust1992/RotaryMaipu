@@ -8,6 +8,7 @@ pnpm-debug.log*
 lerna-debug.log*
 informacion-rotary-fron-end
 node_modules
+informacion-rotary-fron-end.txt
 dist
 dist-ssr
 *.local

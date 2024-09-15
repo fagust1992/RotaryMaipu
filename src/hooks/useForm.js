@@ -1,14 +1,16 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Global } from "../helpers/Global";
-import { useNavigate } from "react-router-dom";
+
+
+import UseAuth from "./UseAuth";
 
 const useForm = (initialValues, submitType) => {
   const [formValues, setFormValues] = useState(initialValues);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [saved, setSaved] = useState("Sin Loguearse"); // Estado de logueo
-
-  const navigate = useNavigate(); // useNavigate debe estar al nivel superior
-
+  const { auth,setAuth } = UseAuth();
+// useNavigate debe estar al nivel superior
+console.log(auth)
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormValues({
@@ -35,7 +37,7 @@ const useForm = (initialValues, submitType) => {
     }
   };
 
-  const loginUser = async () => {
+const loginUser = async () => {
     try {
       const userCredentials = formValues;
       const request = await fetch(Global.url + "user/login", {
@@ -45,13 +47,22 @@ const useForm = (initialValues, submitType) => {
       });
       const data = await request.json();
       console.log(data);
+
       if (data.status === "success") {
         setSaved("logueado");
+
+        // Guardar el token y el usuario en el localStorage
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
 
-        // Redirigir a la página de perfil en lugar de recargar
-        navigate("/perfil");
+        // Actualizar el contexto de autenticación
+        setAuth({
+          token: data.token,
+          user: data.user,
+        });
+
+    
+    
       } else {
         setSaved("error");
       }
@@ -75,6 +86,7 @@ const useForm = (initialValues, submitType) => {
       setIsSubmitting(false);
     }, 2000);
   };
+
 
   return {
     formValues,

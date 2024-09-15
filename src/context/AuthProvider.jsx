@@ -1,56 +1,55 @@
-import { createContext, useState, useEffect } from "react";
+import React, { useState, useEffect, createContext } from "react";
 import { Global } from "../helpers/Global";
 
-export const AuthContext = createContext();
+const AuthContext = createContext();
 
-const AuthProvider = ({ children }) => {
+export const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState({});
 
   useEffect(() => {
-    getProfile();
+    authUser();
   }, []);
 
-  const getProfile = async () => {
-    const token = localStorage.getItem("token");
-    const user = localStorage.getItem("user");
-
-    if (!token || !user) {
-      console.log("No token or user found in localStorage");
-      return null;
-    }
-
-    const userObj = JSON.parse(user);
-
-    const userId = userObj.id;
-
+  const authUser = async () => {
     try {
+      const token = localStorage.getItem("token");
+      const user = localStorage.getItem("user");
+
+      if (!token || !user) {
+        return false;
+      }
+
+      // Convertir los datos a un objeto JSON de JS
+      const userObj = JSON.parse(user);
+      const userId = userObj.id;
+    console.log(userId)
+      // Petición AJAX para obtener el perfil del usuario
       const request = await fetch(Global.url + "user/profile/" + userId, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: token,
+          "Authorization": token
         },
       });
 
       if (!request.ok) {
-        throw new Error(`Error en la solicitud: ${request.status}`);
+        throw new Error('Error al obtener el perfil del usuario');
       }
 
       const data = await request.json();
+      console.log(data)
+      setAuth(data);
 
-      setAuth(data.user); // Actualiza el estado de autenticación con el perfil del usuario
-      return data.user; // Retorna los datos del usuario si es necesario
     } catch (error) {
-      console.error("Error al obtener el perfil del usuario:", error);
-      return null; // o maneja el error de otra manera según tu aplicación
+      console.error('Error:', error);
     }
   };
-  console.log(auth);
+
   return (
-    <AuthContext.Provider value={{ auth, setAuth, getProfile }}>
+    <AuthContext.Provider value={{ auth, setAuth }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-export default AuthProvider;
+export default AuthContext;

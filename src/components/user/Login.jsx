@@ -11,7 +11,7 @@ export const Login = () => {
   console.log(auth)
   if (auth.token) {
     setTimeout(()=>{
-      window.location.href= '/perfil';
+      window.location.href= '/';
     },2000);
   }
   const { formValues, isSubmitting, handleChange, handleSubmit } = useForm(
